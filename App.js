@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 /* IMportando so recursos da API nativa/móvel */
 import * as ImagePicker from "expo-image-picker";
+import * as MediaLibrary from "expo-media-library";
 
 export default function App() {
   /* State tradicional para armazenar a referência da foto (quando existir) */
@@ -24,9 +25,11 @@ export default function App() {
     verificaPermissoes();
   }, []);
 
-  /* Ao pressionar o botão, executa esta função: */
+  /* Ao pressionar o botão, executa esta função */
   const escolherFoto = async () => {
-    /* Acessando via ImagePicker a biblioteca para seleção de apenas imagens, com recurso de edição habilitado, proporção 16,9 e qualidade total. */
+    /* Acessando via ImagePicker a biblioteca
+    para seleção de apenas imagens, com recurso de edição habilitado,
+    proporção 16,9 e qualidade total.  */
     const resultado = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -34,22 +37,30 @@ export default function App() {
       quality: 1,
     });
 
-    /* Se o usuário não cancelar a operação, pegamos a imagem e colocamos no state */
+    /* Se o usuário não cancelar a operação, pegamos a
+    imagem e colocamos no state */
     if (!resultado.canceled) {
       setFoto(resultado.assets[0].uri);
     }
   };
+  console.log(foto);
 
   const acessarCamera = async () => {
-    /* Ao executar esta função quando o usuário escolher tirar uma foto, utilizamos o lauchCameraAsync para abrir a câmera do sistema operacional */
+    /* Ao executar esta função quando o usuário escolhe
+    tirar uma foto, utilizamos o launchCameraAsync para
+    abrir a câmera do sistema operacional */
     const imagem = await ImagePicker.launchCameraAsync({
       allowsEditing: false,
       aspect: [16, 9],
       quality: 0.5,
     });
 
-    /* Se o usuário não cancelar, atualizamos o state com a nova foto capturada */
+    /* Se o usuário não cancelar, atualizamos o state
+    com a nova foto capturada */
     if (!imagem.canceled) {
+      /* Usando a API do MediaLibrary para salvar no
+      armazenamento físico do dispositivo */
+      await MediaLibrary.saveToLibraryAsync(imagem.assets[0].uri);
       setFoto(imagem.assets[0].uri);
     }
   };
@@ -60,10 +71,11 @@ export default function App() {
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Button title="Escolher foto" onPress={escolherFoto} />
         <Button title="Tirar uma nova foto" onPress={acessarCamera} />
+
         {foto ? (
           <Image style={{ width: 300, height: 300 }} source={{ uri: foto }} />
         ) : (
-          <Text>Sem Foto!</Text>
+          <Text>Sem foto!</Text>
         )}
       </View>
     </>
