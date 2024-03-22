@@ -41,12 +41,14 @@ export default function App() {
   };
 
   const acessarCamera = async () => {
+    /* Ao executar esta função quando o usuário escolher tirar uma foto, utilizamos o lauchCameraAsync para abrir a câmera do sistema operacional */
     const imagem = await ImagePicker.launchCameraAsync({
       allowsEditing: false,
       aspect: [16, 9],
       quality: 0.5,
     });
 
+    /* Se o usuário não cancelar, atualizamos o state com a nova foto capturada */
     if (!imagem.canceled) {
       setFoto(imagem.assets[0].uri);
     }
