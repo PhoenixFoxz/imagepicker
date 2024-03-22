@@ -12,6 +12,14 @@ export default function App() {
 
   console.log(status);
 
+  useEffect(() => {
+    async function verificaPermissoes() {
+      const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+      requestPermission(cameraStatus === "granted");
+    }
+    verificaPermissoes();
+  }, []);
+
   return (
     <>
       <StatusBar style="auto" />
