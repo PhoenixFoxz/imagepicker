@@ -62,7 +62,6 @@ export default function App() {
         {foto && (
           <Button title="Compartilhar foto" onPress={compartilharFoto} />
         )}
-
         {foto ? (
           <Image style={{ width: 300, height: 300 }} source={{ uri: foto }} />
         ) : (
